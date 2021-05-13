@@ -1,10 +1,8 @@
-import os
 from pycocotools.coco import COCO
 from filter_cats import filtered_cats
 
 TRAIN_IMAGES_DIRECTORY = "data/train/images"
 TRAIN_ANNOTATIONS_PATH = "data/train/annotations.json"
-FILTERED_TRAIN_IMAGES_DIRECTORY = "filtered_data/train/images"
 
 # Build coco object pointing to the annotations
 coco = COCO(TRAIN_ANNOTATIONS_PATH)
