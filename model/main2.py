@@ -1,6 +1,4 @@
-from tensorflow.keras.layers import Conv2D, BatchNormalization, Activation, MaxPool2D, Conv2DTranspose, Concatenate, Input
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import VGG19
 from keras.utils import normalize
 from keras.utils import to_categorical
 from keras.metrics import MeanIoU
