@@ -1,6 +1,4 @@
-from tensorflow.keras.layers import Conv2D, BatchNormalization, Activation, MaxPool2D, Conv2DTranspose, Concatenate, Input
 from tensorflow.keras.models import Model
-from tensorflow.keras.applications import VGG19
 from tensorflow.keras.utils import normalize
 from tensorflow.keras.utils import to_categorical
 import numpy as np
@@ -19,9 +17,13 @@ if __name__ == "__main__":
 
     train_image_directory = 'train/images/'
     train_mask_directory = 'train/masks/'
+    test_image_directory = 'test/images/'
+    test_mask_directory = 'test/masks/'
 
     X_train = []
     Y_train = []
+    X_test = []
+    Y_test = []
 
     images = os.listdir(train_image_directory)
     for i, image_name in enumerate(images):
@@ -39,6 +41,29 @@ if __name__ == "__main__":
             mask = mask.resize((SIZE, SIZE))
             Y_train.append(np.array(mask))
 
+    images = os.listdir(test_image_directory)
+    for i, image_name in enumerate(images):
+        if(image_name.split('.')[1] == 'jpg'):
+            image = cv2.imread(test_image_directory+image_name, 0)
+            image = Image.fromarray(image)
+            image = image.resize((SIZE, SIZE))
+            X_test.append(np.array(image))
+
+    masks = os.listdir(test_mask_directory)
+    for i, mask_name in enumerate(masks):
+        if(mask_name.split('.')[1] == 'jpg'):
+            mask = cv2.imread(test_mask_directory+mask_name, 0)
+            mask = Image.fromarray(mask)
+            mask = mask.resize((SIZE, SIZE))
+            Y_test.append(np.array(mask))
+
+
+    X_test = np.expand_dims(X_test, axis=3)
+    X_test = normalize(X_test, axis=1)
+    Y_test = np.expand_dims(np.array(Y_test), axis=3) / 255.  #change the 255 if masks already normalized
+
+    test_masks_cat = to_categorical(Y_test, num_classes=n_classes)
+    y_test_cat = test_masks_cat.reshape((Y_test.shape[0], Y_test.shape[1], Y_test.shape[2], n_classes))  #check this line
 
     X_train = np.expand_dims(X_train, axis=3)
     X_train = normalize(X_train, axis=1)
