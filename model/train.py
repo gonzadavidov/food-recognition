@@ -20,8 +20,8 @@ if __name__ == "__main__":
     test_image_directory = 'test/images/'
     test_mask_directory = 'test/masks/'
 
-    X_train = []
-    Y_train = []
+    x_train = []
+    y_train = []
     X_test = []
     Y_test = []
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
             image = cv2.imread(train_image_directory+image_name, 0)
             image = Image.fromarray(image)
             image = image.resize((SIZE, SIZE))
-            X_train.append(np.array(image))
+            x_train.append(np.array(image))
 
     masks = os.listdir(train_mask_directory)
     for i, mask_name in enumerate(masks):
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             mask = cv2.imread(train_mask_directory+mask_name, 0)
             mask = Image.fromarray(mask)
             mask = mask.resize((SIZE, SIZE))
-            Y_train.append(np.array(mask))
+            y_train.append(np.array(mask))
 
     images = os.listdir(test_image_directory)
     for i, image_name in enumerate(images):
@@ -65,29 +65,29 @@ if __name__ == "__main__":
     test_masks_cat = to_categorical(Y_test, num_classes=n_classes)
     y_test_cat = test_masks_cat.reshape((Y_test.shape[0], Y_test.shape[1], Y_test.shape[2], n_classes))  #check this line
 
-    X_train = np.expand_dims(X_train, axis=3)
-    X_train = normalize(X_train, axis=1)
-    Y_train = np.expand_dims(np.array(Y_train), axis=3) / 255.  #change the 255 if masks already normalized
+    x_train = np.expand_dims(x_train, axis=3)
+    x_train = normalize(x_train, axis=1)
+    y_train = np.expand_dims(np.array(y_train), axis=3) / 255.  #change the 255 if masks already normalized
 
-    print("Class values in dataset are:", np.unique(Y_train))  #Check
+    print("Class values in dataset are:", np.unique(y_train))  #Check
 
-    train_masks_cat = to_categorical(Y_train, num_classes=n_classes)
-    y_train_cat = train_masks_cat.reshape((Y_train.shape[0], Y_train.shape[1], Y_train.shape[2], n_classes))  #Check this line
+    train_masks_cat = to_categorical(y_train, num_classes=n_classes)
+    y_train_cat = train_masks_cat.reshape((y_train.shape[0], y_train.shape[1], y_train.shape[2], n_classes))  #Check this line
 
     #Sanity check for images and masks
-    image_number = random.randint(0, len(X_train))
+    image_number = random.randint(0, len(x_train))
     plt.figure(figsize=(12,6))
     plt.subplot(121)
-    plt.imshow(np.reshape(X_train[image_number], (256, 256)), cmap='gray')
+    plt.imshow(np.reshape(x_train[image_number], (256, 256)), cmap='gray')
     plt.subplot(122)
-    plt.imshow(np.reshape(Y_train[image_number], (256, 256)), cmap='gray')
+    plt.imshow(np.reshape(y_train[image_number], (256, 256)), cmap='gray')
 
     #Create Model
     model = build_vgg19_unet(input_shape, n_classes)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])  #Check this line
     model.summary()
 
-    history = model.fit(X_train, y_train_cat, 
+    history = model.fit(x_train, y_train_cat, 
                         batch_size=16,
                         verbose=1,
                         epochs=50,
