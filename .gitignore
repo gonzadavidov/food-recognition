@@ -138,7 +138,7 @@ dmypy.json
 cython_debug/
 
 # VS Code folders
-.vs
+.vscode
 
 # Pycharm folders
 .idea/*
