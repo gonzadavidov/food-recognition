@@ -9,7 +9,7 @@ import os
 import pandas as pd
 import time
 
-from filter_cats import most_annotated
+from dataset_filtering.filter_cats import most_annotated
 
 pylab.rcParams['figure.figsize'] = (8.0, 10.0)
 
@@ -36,7 +36,7 @@ image_ids = [item for sublist in image_ids for item in sublist] # List of lists 
 
 # For this demonstration, we will randomly choose an image_id
 #random_image_id = random.choice(image_ids)
-random_image_id = 67460
+random_image_id = 94213
 
 # Now that we have an image_id, we can load its corresponding object by doing :
 img = coco.loadImgs(random_image_id)[0]
