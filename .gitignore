@@ -140,8 +140,13 @@ cython_debug/
 # VS Code folders
 .vscode
 
+# Pycharm folders
+.idea/*
+*/.idea/*
+
 # Compressed files
 *.tar.gz
 
 # Datasets
 train-v0.4
+data/*

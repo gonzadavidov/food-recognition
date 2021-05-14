@@ -1,13 +1,14 @@
 # %%
 from pycocotools.coco import COCO
 from dataset_utils.filter_cats import filtered_cats
-import skimage as ski
+import skimage.transform as transf
+import skimage.io as io
 import numpy as np
 from tqdm import tqdm
 
 # %%
-TRAIN_IMAGES_DIRECTORY = "train-v0.4/train/images"
-TRAIN_ANNOTATIONS_PATH = "train-v0.4/train/annotations.json"
+TRAIN_IMAGES_DIRECTORY = "dataset_utils/data/train/images"
+TRAIN_ANNOTATIONS_PATH = "dataset_utils/data/train/annotations.json"
 
 # Build coco object pointing to the annotations
 coco = COCO(TRAIN_ANNOTATIONS_PATH)
@@ -29,8 +30,8 @@ train_images = []
 
 for img_path in tqdm(img_paths):
     img_path = TRAIN_IMAGES_DIRECTORY + "/" + img_path
-    img = ski.io.imread(img_path)
-    img = ski.transform.resize(img, (SIZE_X, SIZE_Y))
+    img = io.imread(img_path)
+    img = transf.resize(img, (SIZE_X, SIZE_Y))
     train_images.append(img)
 
 x_train = np.array(train_images)

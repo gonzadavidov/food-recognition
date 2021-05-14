@@ -34,7 +34,7 @@ for rel_path in img_paths:
     # Save images to the target directory of filtered data
     image_path = os.path.join(TRAIN_IMAGES_DIRECTORY, rel_path)
     I = io.imread(image_path)
-    # io.imsave(FILTERED_TRAIN_IMAGES_DIRECTORY + rel_path, I)
+    io.imsave(FILTERED_TRAIN_IMAGES_DIRECTORY + rel_path, I)
     # np.save(FILTERED_TRAIN_IMAGES_DIRECTORY + rel_path[:-4], I)
 print(f'Finished reading, elapsed time: {round(time.time() - start_time, 2)} seconds')
 
