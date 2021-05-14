@@ -1,10 +1,12 @@
+# Test of dataset filtering and image showing
+
 import os
 from pycocotools.coco import COCO
 import skimage.io as io
 import time
 import numpy as np
 
-from filter_cats import filtered_cats
+from dataset_filtering.filter_cats import filtered_cats
 
 TRAIN_IMAGES_DIRECTORY = "data/train/images"
 TRAIN_ANNOTATIONS_PATH = "data/train/annotations.json"
