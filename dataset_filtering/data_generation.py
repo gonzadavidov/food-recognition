@@ -44,7 +44,7 @@ class DataGeneration:
                 # m.shape has a shape of (height, width, 1), convert it to a shape of (height, width)
                 aux = m[:, :, j].reshape((img['height'], img['width']))
                 union = aux | union
-            mask = transf.resize(union, (self.x_size, self.y_size))
+            mask = cv2.resize(union.astype(float), (self.x_size, self.y_size))
             channel = self.cat_dict[annotation['category_id']]
             # Add mask to the corresponding channel
             ret[:, :, channel] = mask

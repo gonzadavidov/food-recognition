@@ -114,14 +114,13 @@ callbacks = [
              TensorBoard(log_dir="/content/logs/tensorboard_logs")
 ]
 
-with tf.device("/device:GPU:0"):
-  history = model.fit_generator(
-                      batch_generator(BATCH_SIZE, TRAIN_IMAGES_PATH, TRAIN_ANNOTATIONS_PATH),
-                      verbose=1,
-                      epochs=10,
-                      validation_data=batch_generator(BATCH_SIZE, TEST_IMAGES_PATH, TEST_ANNOTATIONS_PATH),
-                      #class_weight=class_weights,
-                      shuffle=True,
-                      callbacks=callbacks)
+history = model.fit(
+                    batch_generator(BATCH_SIZE, TRAIN_IMAGES_PATH, TRAIN_ANNOTATIONS_PATH),
+                    verbose=1,
+                    epochs=50,
+                    validation_data=batch_generator(BATCH_SIZE, TEST_IMAGES_PATH, TEST_ANNOTATIONS_PATH),
+                    #class_weight=class_weights,
+                    shuffle=True,
+                    callbacks=callbacks)
 
 model.save('food_recognition_50_epochs_test.hdf5') #Saving a model with 50 epochs
