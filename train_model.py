@@ -7,9 +7,8 @@ from tqdm import tqdm
 from pycocotools.coco import COCO
 import matplotlib.pyplot as plt
 
-sys.path.append("/content/drive/Shareddrives/Intercambio/MATERIAS/Deep Learning/Food Recognition/scripts")
-from data_generation import DataGeneration
-from filter_cats import filtered_cats
+from dataset_filtering.data_generation import DataGeneration
+from dataset_filtering.filter_cats import filtered_cats
 
 import tensorflow as tf
 from tensorflow.keras.models import Model
@@ -20,19 +19,19 @@ from tensorflow.keras.applications import VGG19
 from tensorflow.keras.metrics import MeanIoU
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard
 
-tf.test.gpu_device_name()
+print(tf.test.gpu_device_name())
 
-SIZE_X = 416
-SIZE_Y = 416
+SIZE_X = 128
+SIZE_Y = 128
 N_CATS = 16
 
 INPUT_SHAPE = (SIZE_X, SIZE_Y, 3)
 BATCH_SIZE = 16
 
-TRAIN_IMAGES_PATH = "/content/images/train/images"
-TRAIN_ANNOTATIONS_PATH = "/content/images/train/annotations.json"
-TEST_IMAGES_PATH = "/content/images/test/images"
-TEST_ANNOTATIONS_PATH = "/content/images/test/annotations.json"
+TRAIN_IMAGES_PATH = "train/images"
+TRAIN_ANNOTATIONS_PATH = "train/annotations.json"
+TEST_IMAGES_PATH = "test/images"
+TEST_ANNOTATIONS_PATH = "test/annotations.json"
 
 def batch_generator(batchsize, images_path, annotation_path):
   i_img = 0
