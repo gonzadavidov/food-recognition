@@ -14,12 +14,13 @@ class DataGeneration:
             ATTENTION: One extra channel is added for the pixels not annotated with
                        any category.
     """
-    def __init__(self, coco, x_size, y_size, cat_ids):
+    def __init__(self, coco, x_size, y_size, cat_ids, add_background=True):
         self.coco = coco
         self.x_size = x_size
         self.y_size = y_size
         self.cat_ids = cat_ids
         self.n_cats = len(cat_ids)
+        self.n_channels = self.n_cats + 1 if add_background else self.n_cats
         self.cat_dict = dict(zip(cat_ids, range(len(cat_ids))))
 
     def x_sample(self, img_path):
@@ -27,7 +28,7 @@ class DataGeneration:
         return cv2.resize(img, (self.x_size, self.y_size))
 
     def y_sample(self, img_id):
-        ret = np.zeros((self.x_size, self.y_size, self.n_cats + 1))
+        ret = np.zeros((self.x_size, self.y_size, self.n_channels))
         cat_ids = self.cat_ids
         coco = self.coco
         img = coco.loadImgs(img_id)[0]
@@ -41,19 +42,54 @@ class DataGeneration:
             m = cocomask.decode(rle)
             n = m.shape[2]
             union = np.zeros((m.shape[0], m.shape[1]), dtype=np.uint32)
-            print(f"H={img['height']}, W={img['width']}")
             # If more than one item, put all together in one channel
             for j in range(n):
                 # m.shape has a shape of (height, width, 1), convert it to a shape of (height, width)
                 aux = m[:, :, j].reshape((img['height'], img['width']))
                 union = aux | union
-            mask = cv2.resize(union.astype(float), (self.x_size, self.y_size))
+            # Nearest neighbour interpolation for the mask to only have 0s and 1s
+            mask = cv2.resize(union.astype(float), (self.x_size, self.y_size), interpolation=cv2.INTER_NEAREST)
             channel = self.cat_dict[annotation['category_id']]
             # Add mask to the corresponding channel
             ret[:, :, channel] = mask
 
-        # Add background category
-        ret[:, :, self.n_cats] = np.logical_not(ret.any(axis=2)).astype(float)
+        # Add background category if wanted
+        if self.n_cats < self.n_channels:
+            ret[:, :, self.n_channels - 1] = np.logical_not(ret.any(axis=2)).astype(float)
 
         return ret
 
+    def get_class_weights(self, img_id):
+        """
+            get_class_weights: Calculates the percentage of pixels of each class
+                                present in a given image
+        @param img_id: Image ID
+        @return: list of weights
+        """
+        ret = np.zeros((self.n_channels, 1)).reshape(self.n_channels)
+        cat_ids = self.cat_ids
+        coco = self.coco
+        img = coco.loadImgs(img_id)[0]
+
+        # Only load annotations of the wanted categories on the current image
+        ann_ids = coco.getAnnIds(imgIds=img_id, catIds=cat_ids)
+        annotations = coco.loadAnns(ann_ids)
+
+        # Total amount of annotated pixels, all of them is there is background,
+        #   otherwise it will be calculated afterwards
+        total_pixels = img['height'] * img['width'] if self.n_cats < self.n_channels else 0
+
+        # Load each annotation on the corresponding channel
+        for _idx, annotation in enumerate(annotations):
+            channel = self.cat_dict[annotation['category_id']]
+            # Save amount of pixels of the current channel
+            ret[channel] = annotation['area']
+            # Calculate total_pixels if no background
+            if self.n_cats == self.n_channels:
+                total_pixels += ret[channel]
+
+        # If there is background, assign all remaining pixels
+        if self.n_cats < self.n_channels:
+            ret[-1] = total_pixels - np.sum(ret)
+
+        return ret / total_pixels

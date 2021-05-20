@@ -28,7 +28,7 @@ img_paths = [img["file_name"] for img in images]
 
 data_gen = DataGeneration(coco, SIZE_X, SIZE_Y, cat_ids)
 
-i = 106
+i = 200
 while True:
     annotation_ids = coco.getAnnIds(imgIds=img_ids[i], catIds=cat_ids)
     if len(annotation_ids) > 1:
@@ -43,5 +43,19 @@ plt.imshow(cv2.cvtColor(x_train, cv2.COLOR_BGR2RGB)); plt.axis('off')
 annotation_ids = coco.getAnnIds(imgIds=img_ids[i], catIds=cat_ids)
 annotations = coco.loadAnns(annotation_ids)
 # Render annotations on top of the image
-coco.showAnns(annotations)
+# coco.showAnns(annotations)
 plt.imshow(y_train[:, :, n_cats], alpha=0.5); plt.axis('off')
+
+# Check class weights
+cat_dict = dict(zip(cat_ids, cat_names))
+class_weights = data_gen.get_class_weights(img_ids[i])
+for k, id in enumerate(cat_ids):
+    if class_weights[k]:
+        print(f"Category: {cat_dict[id]}, {class_weights[k]*100: .1f} %")
+
+print(f"Background: {class_weights[n_cats] * 100: .1f} %")
+
+for id in img_ids:
+    class_weights += data_gen.get_class_weights(img_ids[i])
+
+class_weights /= len(img_ids)

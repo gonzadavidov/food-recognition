@@ -29,7 +29,7 @@ n_imgs = len(img_ids)
 print(f'{n_cats} categories, with {n_imgs} images')
 # Input training set will be composed by all images in this small test
 max_ram = 12e9  # In bytes
-    max_batch_size = max_ram / ((SIZE_X*SIZE_Y)*(3*8 + n_cats * 8))
+max_batch_size = max_ram / ((SIZE_X*SIZE_Y)*(3*8 + n_cats * 8))
 batch_size = n_imgs if n_imgs < max_batch_size else max_batch_size
 print(f'Batch size is {batch_size}')
 
