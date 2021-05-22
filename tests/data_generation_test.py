@@ -26,7 +26,7 @@ n_cats = 2
 images = coco.loadImgs(img_ids)
 img_paths = [img["file_name"] for img in images]
 
-data_gen = DataGeneration(coco, SIZE_X, SIZE_Y, cat_ids)
+data_gen = DataGeneration(coco, SIZE_X, SIZE_Y, cat_ids, False)
 
 i = 200
 while True:
@@ -44,7 +44,7 @@ annotation_ids = coco.getAnnIds(imgIds=img_ids[i], catIds=cat_ids)
 annotations = coco.loadAnns(annotation_ids)
 # Render annotations on top of the image
 # coco.showAnns(annotations)
-plt.imshow(y_train[:, :, n_cats], alpha=0.5); plt.axis('off')
+plt.imshow(y_train[:, :, 0], alpha=0.5); plt.axis('off')
 
 # Check class weights
 cat_dict = dict(zip(cat_ids, cat_names))
