@@ -17,6 +17,6 @@ The repo is organised as follows:
 
 
 Authors:
-* Facundo David Farall
-* Gonzalo Joaquin Davidov
-* Rafael Nicolas Trozzo
+* [Facundo David Farall](https://github.com/ffarall)
+* [Gonzalo Joaquin Davidov](https://github.com/gonzadavidov)
+* [Rafael Nicolas Trozzo](https://github.com/nicotrozzo)
