@@ -9,7 +9,7 @@ The repo is organised as follows:
   * [\<model>_pretrained.ipynb](./colab_notebooks/vgg19_pretrained.ipynb) notebooks for building and training each one of the chosen backbones, using both our own implementation and the [Segmentation Models](https://github.com/qubvel/segmentation_models) Library.
   * [models_evaluator](./colab_notebooks/models_evaluator.ipynb) notebook for evaluating each model both by its metrics and looking at the predictions.
 * [dataset_filtering](./dataset_filtering/) directory contains:
-  * [filtered_cats and most_annotated](./dataset_filtering/__pycache__/filter_cats.cpython-37.pyc) functions used to filter the MS-COCO dataset by categories.
+  * [filtered_cats() and most_annotated()](./dataset_filtering/__pycache__/filter_cats.cpython-37.pyc) functions used to filter the MS-COCO dataset by categories.
   * [DataGeneration](./dataset_filtering/__pycache__/data_generation.cpython-37.pyc) class dedicated to generate the input and output samples for the net.
 * [model](./model/) directory contains test files regarding the construction, training and loading of Keras models. 
 * [tests](./tests/) directory contains all kind of test files for the modules made, and more.
